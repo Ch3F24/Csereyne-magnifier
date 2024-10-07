@@ -19,6 +19,10 @@ document.addEventListener("DOMContentLoaded", () => {
     imageContent(activeIndex)
 
     imageContainer.addEventListener('touchmove', zooming);
+    imageContainer.addEventListener('touchmove', (event) => {
+        event.preventDefault(); // Prevent scrolling
+        zooming(event);
+    });
     // imageContainer.addEventListener('touchmove', zooming);
 
     function debounce(func, wait) {
@@ -36,27 +40,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const toggleBlurDebounced = debounce(toggleBlur, 100);
 
+    function getPosition(event) {
+        let x, y;
+        if (event.touches) {
+            const rect = imageContainer.getBoundingClientRect();
+            x = event.touches[0].clientX - rect.left;
+            y = event.touches[0].clientY - rect.top;
+        } else {
+            x = event.offsetX;
+            y = event.offsetY;
+        }
+        return { offsetX: x, offsetY: y };
+    }
+
     function zooming(event) {
+        event.preventDefault(); // Prevent scrolling
         image.classList.add('disable-blur')
         toggleBlurDebounced()
 
-        let offsetX, offsetY;
+        const { offsetX, offsetY } = getPosition(event);
 
-        if (event.touches) {
-            offsetX = event.touches[0].clientX;
-            offsetY = event.touches[0].clientY;
-        } else {
-            offsetX = event.offsetX;
-            offsetY = event.offsetY;
-        }
 
         const left = Math.min(Math.max(0, offsetX - sharpSpotSize / 2), imageContainer.clientWidth - sharpSpotSize);
         const top = Math.min(Math.max(0, offsetY - sharpSpotSize / 2), imageContainer.clientHeight - sharpSpotSize);
 
+        // sharpSpot.style.left = `${left}px`;
+        // sharpSpot.style.top = `${top}px`;
+        // sharpSpot.style.backgroundImage = `url('${image.src}')`;
+        // // sharpSpot.style.backgroundPosition = `-${left * zoomLevel}px -${top * zoomLevel}px`;
+        // sharpSpot.style.backgroundPosition = `-${(offsetX * zoomLevel) - (sharpSpotSize / 2)}px -${(offsetY * zoomLevel) - (sharpSpotSize / 2)}px`;
+        // sharpSpot.style.backgroundSize = `${imageContainer.clientWidth * zoomLevel}px ${imageContainer.clientHeight * zoomLevel}px`;
+
         sharpSpot.style.left = `${left}px`;
         sharpSpot.style.top = `${top}px`;
         sharpSpot.style.backgroundImage = `url('${image.src}')`;
-        // sharpSpot.style.backgroundPosition = `-${left * zoomLevel}px -${top * zoomLevel}px`;
         sharpSpot.style.backgroundPosition = `-${(offsetX * zoomLevel) - (sharpSpotSize / 2)}px -${(offsetY * zoomLevel) - (sharpSpotSize / 2)}px`;
         sharpSpot.style.backgroundSize = `${imageContainer.clientWidth * zoomLevel}px ${imageContainer.clientHeight * zoomLevel}px`;
     };
