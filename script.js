@@ -40,7 +40,15 @@ document.addEventListener("DOMContentLoaded", () => {
         image.classList.add('disable-blur')
         toggleBlurDebounced()
 
-        const { offsetX, offsetY } = event;
+        let offsetX, offsetY;
+
+        if (event.touches) {
+            offsetX = event.touches[0].clientX;
+            offsetY = event.touches[0].clientY;
+        } else {
+            offsetX = event.offsetX;
+            offsetY = event.offsetY;
+        }
 
         const left = Math.min(Math.max(0, offsetX - sharpSpotSize / 2), imageContainer.clientWidth - sharpSpotSize);
         const top = Math.min(Math.max(0, offsetY - sharpSpotSize / 2), imageContainer.clientHeight - sharpSpotSize);
