@@ -1,204 +1,113 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const imageContainer = document.querySelector('.zooming-container');
-    const sharpSpot = document.querySelector('.sharp-spot');
-    const image = document.querySelector('.blurred-image');
-    const slides = document.querySelectorAll('.swiper-slide');
-    const langSelector = document.querySelectorAll('.lang-selector-item');
-    const description = document.querySelector('.image-description');
-    
-    let zoomLevel = 1.5;
-    const zoomFactor = 0.1;
-    const sharpSpotSize = 280; // Assuming sharpSpot is 300x300
-    let activeIndex = 0
-    let lang = document.querySelector('html').getAttribute('lang');
-
-    document.addEventListener('contextmenu', (event) => {
-        event.preventDefault();
-    });
-
-    imageContent(activeIndex)
-
-    imageContainer.addEventListener('mousemove', zooming);
-    // imageContainer.addEventListener('touchmove', zooming);
-
-    function debounce(func, wait) {
-        let timeout;
-        return function(...args) {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => func.apply(this, args), wait);
-
-        };
-    }
-
-    function toggleBlur() {
-        image.classList.remove('disable-blur')
-    }
-
-    const toggleBlurDebounced = debounce(toggleBlur, 100);
-
-    function zooming(event) {
-        image.classList.add('disable-blur')
-        toggleBlurDebounced()
-
-        const { offsetX, offsetY } = event;
-
-        const left = Math.min(Math.max(0, offsetX - sharpSpotSize / 2), imageContainer.clientWidth - sharpSpotSize);
-        const top = Math.min(Math.max(0, offsetY - sharpSpotSize / 2), imageContainer.clientHeight - sharpSpotSize);
-
-        sharpSpot.style.left = `${left}px`;
-        sharpSpot.style.top = `${top}px`;
-        sharpSpot.style.backgroundImage = `url('${image.src}')`;
-        // sharpSpot.style.backgroundPosition = `-${left * zoomLevel}px -${top * zoomLevel}px`;
-        sharpSpot.style.backgroundPosition = `-${(offsetX * zoomLevel) - (sharpSpotSize / 2)}px -${(offsetY * zoomLevel) - (sharpSpotSize / 2)}px`;
-        sharpSpot.style.backgroundSize = `${imageContainer.clientWidth * zoomLevel}px ${imageContainer.clientHeight * zoomLevel}px`;
-    };
-
-    slides.forEach((slide, index) => {
-        slide.addEventListener('click', () => {
-    
-            const activeSource = slides[index].dataset.image;
-            activeIndex = index;
-            
-            if(activeSource) {
-                image.src = 'images/' + activeSource;
-                sharpSpot.style.backgroundImage = `url('${image.src}')`;
-                sharpSpot.style.left = `0px`;
-                sharpSpot.style.top = `0px`;
-                imageContent(index);
-            }
-        });
-    });
-
-    langSelector.forEach((item, index) => {
-        item.addEventListener('click', () => {
-            const activeLang = item.dataset.lang;
-            lang = activeLang;
-            
-            if(activeLang) {
-                document.querySelector('html').setAttribute('lang', activeLang);
-                imageContent(index)
-            }
-        });
-    });
-
-    function imageContent(index) {
-        const content = data[index][lang];
-        description.innerHTML = `<strong>${content.title}</strong> ${content.description}`;
-    }
-});
-
-
-
-const data = [
+[
     {
         "hu": {
-            "title": "Bem tábornok érdemkeresztje,",
+            "title": "Bem tábornok érdemkeresztje",
             "description": "Kossuth Lajos adománya. Megsemmisült 1945-ben."
         },
         "ro": {
-            "title": "Crucea de Merit a Generalului Bem,",
+            "title": "Crucea de Merit a Generalului Bem",
             "description": "Donată de Lajos Kossuth, distrusă în 1945."
         },
         "en": {
-            "title": "General Bem’s Order of Merit,",
+            "title": "General Bem’s Order of Merit",
             "description": "Donated by Lajos Kossuth. Destroyed in 1945."
         }
     },
     {
         "hu": {
-            "title": "Bem tábornok érdemkeresztje,",
+            "title": "Bem tábornok érdemkeresztje",
             "description": "Kossuth Lajos adománya. Megsemmisült 1945-ben."
         },
         "ro": {
-            "title": "Crucea de Merit a Generalului Bem,",
+            "title": "Crucea de Merit a Generalului Bem",
             "description": "Donată de Lajos Kossuth, distrusă în 1945."
         },
         "en": {
-            "title": "General Bem’s Order of Merit,",
+            "title": "General Bem’s Order of Merit",
             "description": "Donated by Lajos Kossuth. Destroyed in 1945."
         }
     },
     {
         "hu": {
-            "title": "A Kossuth Lajos által címzett levélboríték,",
+            "title": "A Kossuth Lajos által címzett levélboríték",
             "description": "Azon adománylevél szövege, mellyel a Bem érdemkeresztjét a Székely Nemzeti Múzeumnak adományozta. Az eredeti levél megsemmisült 1945-ben."
         },
         "ro": {
-            "title": "Plicul adresat de Lajos Kossuth,",
+            "title": "Plicul adresat de Lajos Kossuth",
             "description": "Textul scrisorii de donație prin care acesta a donat Crucea de Merit a lui Bem Muzeului Național Secuiesc. Scrisoarea originală a fost distrusă în 1945."
         },
         "en": {
-            "title": "Envelope addressed by Lajos Kossuth,",
+            "title": "Envelope addressed by Lajos Kossuth",
             "description": "Text of the donation letter with which the Order of Merit of General Bem was donated to the Székely National Museum. The original letter was destroyed in 1945."
         }
     },
     {
         "hu": {
-            "title": "Felvidéki ónmázas kanna,",
+            "title": "Felvidéki ónmázas kanna",
             "description": "A Cserey család gyűjteményéből. Megsemmisült 1945-ben."
         },
         "ro": {
-            "title": "Ulcior cu glazură de cositor,",
+            "title": "Ulcior cu glazură de cositor",
             "description": "Din Ungaria de Sus, din colecția familiei Cserey. Distrus în 1945."
         },
         "en": {
-            "title": "Tin glazed kettle,",
+            "title": "Tin glazed kettle",
             "description": "From Upper Hungary, from the Cserey family collection. Destroyed in 1945."
         }
     },
     {
         "hu": {
-            "title": "Az elpusztult Daniel-láda,",
+            "title": "Az elpusztult Daniel-láda",
             "description": "Ismeretlen fényképész felvétele, 1930-as évek."
         },
         "ro": {
-            "title": "Lada cu comori a familiei Daniel,",
+            "title": "Lada cu comori a familiei Daniel",
             "description": "Fotograf necunoscut, anii 1930."
         },
         "en": {
-            "title": "The destroyed Daniel family chest,",
+            "title": "The destroyed Daniel family chest",
             "description": "Unknown photograph, 1930s."
         }
     },
     {
         "hu": {
-            "title": "Az elpusztult Daniel-láda,",
+            "title": "Az elpusztult Daniel-láda",
             "description": "Ismeretlen fényképész felvétele, 1930-as évek."
         },
         "ro": {
-            "title": "Lada cu comori a familiei Daniel,",
+            "title": "Lada cu comori a familiei Daniel",
             "description": "Fotograf necunoscut, anii 1930."
         },
         "en": {
-            "title": "The destroyed Daniel family chest,",
+            "title": "The destroyed Daniel family chest",
             "description": "Unknown photograph, 1930s."
         }
     },
     {
         "hu": {
-            "title": "Az elpusztult Daniel-láda,",
+            "title": "Az elpusztult Daniel-láda",
             "description": "Ismeretlen fényképész felvétele, 1930-as évek."
         },
         "ro": {
-            "title": "Lada cu comori a familiei Daniel,",
+            "title": "Lada cu comori a familiei Daniel",
             "description": "Fotograf necunoscut, anii 1930."
         },
         "en": {
-            "title": "The destroyed Daniel family chest,",
+            "title": "The destroyed Daniel family chest",
             "description": "Unknown photograph, 1930s."
         }
     },
     {
         "hu": {
-            "title": "1945-ben megsemmisült könyvek,",
+            "title": "1945-ben megsemmisült könyvek",
             "description": "Fotofilm felvétele, 1940-es évek."
         },
         "ro": {
-            "title": "Cărți distruse în 1945,",
+            "title": "Cărți distruse în 1945",
             "description": "Fotografie de Fotofilm, anii 1940."
         },
         "en": {
-            "title": "Books destroyed in 1945,",
+            "title": "Books destroyed in 1945",
             "description": "Photograph: Fotofilm, 1930s."
         }
     },
@@ -274,11 +183,11 @@ const data = [
     },
     {
         "hu": {
-            "title": "Kötélverő céh kannája 1740-ből,",
+            "title": "Kötélverő céh kannája 1740-ből",
             "description": "Megsemmisült 1945-ben. Gödri Ferenc felvétele, 1932."
         },
         "ro": {
-            "title": "Ulcior al breslei funarilor, din 1740,",
+            "title": "Ulcior al breslei funarilor, din 1740",
             "description": "Distrus în 1945. Fotograf: Ferenc Gödri, 1932."
         },
         "en": {
@@ -316,11 +225,11 @@ const data = [
     },
     {
         "hu": {
-            "title": "Lőportartó szaru,",
+            "title": "Lőportartó szaru",
             "description": "1709-ből, Csereyné gyűjtése Zathureczky Bertától. Megsemmisült 1945-ben"
         },
         "ro": {
-            "title": "Corn pentru praf de pușcă,",
+            "title": "Corn pentru praf de pușcă",
             "description": "datat 1709. Colectat de la Berta Zathureczky. Distrusă în 1945"
         },
         "en": {
@@ -400,15 +309,15 @@ const data = [
     },
     {
         "hu": {
-            "title": "Kályhacsempe,",
+            "title": "Kályhacsempe",
             "description": "1687-ből. Csereyné gyűjtése Imecsfalváról. László József rajza. Megsemmisült 1945-ben"
         },
         "ro": {
-            "title": "Cahlă datată,",
+            "title": "Cahlă datată",
             "description": "1687. Colectat de d-na Cserey din Imeni. Distrusă în 1945. Desen de JózsefLászló"
         },
         "en": {
-            "title": "Stove tiles,",
+            "title": "Stove tiles",
             "description": "dated 1687. Collected by Mrs. Cserey from Imeni/Imecsfalva. Destroyed in 1945. Drawing by JózsefLászló"
         }
     },
