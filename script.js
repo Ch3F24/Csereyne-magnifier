@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     imageContent(activeIndex)
 
-    imageContainer.addEventListener('mousemove', zooming);
+    imageContainer.addEventListener('touchmove', zooming);
     // imageContainer.addEventListener('touchmove', zooming);
 
     function debounce(func, wait) {
