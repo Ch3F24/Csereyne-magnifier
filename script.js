@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const description = document.querySelector('.image-description');
     
     let zoomLevel = 1.5;
-    const zoomFactor = 0.1;
     const sharpSpotSize = 280; // Assuming sharpSpot is 300x300
     let activeIndex = 0
     let lang = document.querySelector('html').getAttribute('lang');
@@ -25,6 +24,10 @@ document.addEventListener("DOMContentLoaded", () => {
         event.preventDefault(); // Prevent scrolling
         zooming(event);
     });
+
+    imageContainer.addEventListener('touchend', () => {
+        pulseFocusDebounced()
+    });
     
     // imageContainer.addEventListener('touchmove', zooming);
 
@@ -39,9 +42,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function toggleBlur() {
         image.classList.remove('disable-blur')
+        // sharpSpot.classList.remove('active')
     }
 
-    const toggleBlurDebounced = debounce(toggleBlur, 100);
+    function pulseFocus() {
+        sharpSpot.classList.remove('active')
+    }
+
+    const toggleBlurDebounced = debounce(toggleBlur, 300);
+    const pulseFocusDebounced = debounce(pulseFocus, 10000);
 
     function getPosition(event) {
         let x, y;
@@ -59,6 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function zooming(event) {
         event.preventDefault(); // Prevent scrolling
         image.classList.add('disable-blur')
+        sharpSpot.classList.add('active')
         toggleBlurDebounced()
 
         const { offsetX, offsetY } = getPosition(event);
