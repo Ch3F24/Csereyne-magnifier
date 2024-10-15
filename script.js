@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
         sharpSpot.classList.remove('active')
     }
 
-    const toggleBlurDebounced = debounce(toggleBlur, 300);
+    const toggleBlurDebounced = debounce(toggleBlur, 2000);
     const pulseFocusDebounced = debounce(pulseFocus, 10000);
 
     function getPosition(event) {
