@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let zoomLevel = 1.5;
     const sharpSpotSize = 280; // Assuming sharpSpot is 300x300
     let activeIndex = 0
-    let lang = document.querySelector('html').getAttribute('lang');
+    let lang = document.querySelector('html').getAttribute('lang') || 'hu';
 
     document.addEventListener('contextmenu', (event) => {
         event.preventDefault();
@@ -87,10 +87,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     slides.forEach((slide, index) => {
+
         slide.addEventListener('click', () => {
+            
             sharpSpot.style.visibility = 'hidden';
             const activeSource = slides[index].dataset.image;
             activeIndex = index;
+            imageContent(index)
             
             if(activeSource) {
 
@@ -118,13 +121,15 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     langSelector.forEach((item, index) => {
+
         item.addEventListener('click', () => {
+
             const activeLang = item.dataset.lang;
             lang = activeLang;
             
             if(activeLang) {
                 document.querySelector('html').setAttribute('lang', activeLang);
-                imageContent(index)
+                imageContent(activeIndex)
             }
         });
     });
